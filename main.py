@@ -37,33 +37,46 @@ def get_furthest_word(words, word2vect):
         return words[np.argmax(dists)]
 
 def a_is_to_b_as_x_is_to(a, b, x , word2vect):
-        resultVect = x+(a-b)
-        idx = (np.abs(word2vect-resultVect)).argmin()
-        return array[idx]
+        resultVect = word2vect[x]+(word2vect[a]-word2vect[b])
+        tempArray = np.array(word2vect.items())
+        temp = tempArray - resultVect
+        ipx = np.abs(temp).argmin()
+        return a[ipx]
 
-def find_odd_one_out(word2vect):
+def find_odd_one_out(word2vec):
+	print "Hello human. I attempt to find a word in a list which doesn't belong.\n\n"
+	print 'Type several words separated by spaces. The more words you enter, the better I can guess.'
+	while (True):
+		words = raw_input('->').lower().split(' ')
+		if(words[0] == 'q'):
+                        return
+		print 'I think',get_furthest_word(words, word2vec),'doesnt belong in this list!\n'
+
+                
+def a_is_to_b(word2vect):
         print "I try to find a word that is to c, as b is to a"
         print 'type three words seperated by spaces'
         while (True):
                 words = raw_input('->').lower().split(' ')
-                print 'I think ', a_is_to_b_as_x_is_to(words[1], words[2], words[3], word2vect), ' is to ', words[3], ' as ', word[2], ' is to ', word[1]
-                
-def a_is_to_b(word2vect):
-        print "Hello human. I attempt to find a word in a list which doesn't belong."
-        print 'Type several words separated by spaces. The more words you enter, the better I can guess.'
-        
+                if(words[0] == 'q'):
+                        return
+                elif words[0] not in word2vect: print 'I\'m sorry. I don\'t know ', words[0]
+                elif words[1] not in word2vect: print 'I\'m sorry. I don\'t know ', words[1]
+                elif words[2] not in word2vect: print 'I\'m sorry. I don\'t know ', words[2]
+                else :print 'I think ', a_is_to_b_as_x_is_to(words[0], words[1], words[2], word2vect), ' is to ', words[2], ' as ', word[1], ' is to ', word[0]
 def main():
         print 'I have two modes of operation. I can find a word that doesn\'t belong.'
         print 'Or I can try to guess what word is similar to another, in the same was as two other words are similar'
         print 'loading knowledge from Wikipedia...should take 10-20 seconds'
         word2vec = load_word2vec('vectors')
-        print 'For find the odd one out press 1. For a is to b, as c is to ? press 2.'
-        while(true):
+        while(True):
+                print 'For find the odd one out press 1. For a is to b, as c is to ? press 2.'
                 choice = raw_input('->')
-                if(choice == 1):
-                        find_odd_one_out(word2vect)
-                elif (choice == 2):
-                        a_is_to_b(word2vect)
+                if(choice == '1'):
+                        find_odd_one_out(word2vec)
+                elif (choice == '2'):
+                        a_is_to_b(word2vec)
+               
                 
 if __name__ == '__main__':
     main()
